@@ -1,1 +1,216 @@
 
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RhymeStudio AI</title><style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #11111c;
+  color: white;
+}
+
+header {
+  padding: 22px;
+  text-align: center;
+  background: #1c1b2d;
+  border-bottom: 1px solid #39364e;
+}
+
+header h1 {
+  margin: 0;
+  color: #d8b4fe;
+  font-size: 28px;
+}
+
+header p {
+  color: #aaa6bd;
+  font-size: 13px;
+}
+
+.container {
+  max-width: 750px;
+  margin: auto;
+  padding: 20px;
+}
+
+.card {
+  background: #1c1b2d;
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+  border: 1px solid #39364e;
+}
+
+h2 {
+  font-size: 18px;
+  color: #d8b4fe;
+  margin-top: 0;
+}
+
+label {
+  display: block;
+  margin: 15px 0 8px;
+  font-size: 14px;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 12px;
+  background: #29273b;
+  border: 1px solid #514b6a;
+  border-radius: 9px;
+  color: white;
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.upload {
+  border: 1px dashed #9b83ca;
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 12px;
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(90deg,#a78bfa,#e879f9);
+  color: #171321;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+#output {
+  white-space: pre-wrap;
+  line-height: 1.6;
+  color: #e9ddff;
+}
+
+.preview {
+  max-width: 100%;
+  max-height: 130px;
+  display: none;
+  margin-top: 10px;
+  border-radius: 8px;
+}
+
+footer {
+  text-align: center;
+  color: #858197;
+  font-size: 12px;
+  padding: 25px;
+}
+</style></head><body><header>
+  <h1>✨ RhymeStudio AI</h1>
+  <p>Your songs. Your characters. Your animated world.</p>
+</header><div class="container">  <div class="card">
+    <h2>🎨 Your Characters</h2>
+    <p>Upload the characters you want in your video.</p><div class="upload">
+  <label>🦆 Character 1</label>
+  <input type="file" accept="image/*" id="char1">
+  <img class="preview" id="preview1">
+</div>
+
+<div class="upload">
+  <label>🐰 Character 2</label>
+  <input type="file" accept="image/*" id="char2">
+  <img class="preview" id="preview2">
+</div>
+
+<div class="upload">
+  <label>🧸 Character 3</label>
+  <input type="file" accept="image/*" id="char3">
+  <img class="preview" id="preview3">
+</div>
+
+  </div>  <div class="card">
+    <h2>🎵 Your Music</h2>
+    <label>Upload your song</label>
+    <input type="file" accept="audio/*" id="music">
+  </div>  <div class="card">
+    <h2>📝 Your Lyrics</h2>
+    <label>Paste your complete song lyrics</label>
+    <textarea id="lyrics" placeholder="Paste your lyrics here..."></textarea>
+  </div>  <div class="card">
+    <h2>🌈 Describe Your Video</h2>
+    <label>What should your cartoon look like?</label>
+    <textarea id="description" placeholder="Example: A colourful 3D cartoon world with a little yellow duck, a white bunny and a brown teddy. They play beside a blue pond..."></textarea>
+  </div>  <div class="card">
+    <h2>🎬 Generate Your Storyboard</h2>
+    <p>Our first prototype will organise your project into scenes.</p>
+    <button onclick="generateStoryboard()">✨ Generate Storyboard</button>
+    <br><br>
+    <div id="output"></div>
+  </div></div><footer>
+  RhymeStudio AI · Made for little imaginations 💜
+</footer><script>
+
+function previewImage(inputId, previewId) {
+  document.getElementById(inputId).addEventListener("change", function() {
+    const file = this.files[0];
+
+    if (file) {
+      const preview = document.getElementById(previewId);
+      preview.src = URL.createObjectURL(file);
+      preview.style.display = "block";
+    }
+  });
+}
+
+previewImage("char1", "preview1");
+previewImage("char2", "preview2");
+previewImage("char3", "preview3");
+
+function generateStoryboard() {
+
+  const lyrics = document.getElementById("lyrics").value.trim();
+  const description = document.getElementById("description").value.trim();
+
+  const characters = [
+    document.getElementById("char1").files[0],
+    document.getElementById("char2").files[0],
+    document.getElementById("char3").files[0]
+  ];
+
+  const music = document.getElementById("music").files[0];
+
+  if (!characters.every(Boolean) || !music || !lyrics || !description) {
+    alert("Please upload all three characters, your music, lyrics and video description!");
+    return;
+  }
+
+  const lines = lyrics.split("\n").filter(line => line.trim());
+
+  let storyboard = "🎬 YOUR STORYBOARD\n\n";
+  storyboard += "VIDEO DESCRIPTION:\n" + description + "\n\n";
+  storyboard += "CHARACTERS: 3 uploaded\n";
+  storyboard += "MUSIC: " + music.name + "\n\n";
+  storyboard += "SCENES:\n\n";
+
+  lines.forEach((line, index) => {
+    storyboard += "Scene " + (index + 1) + "\n";
+    storyboard += "Lyrics: " + line + "\n";
+    storyboard += "Visual: Create an animated scene matching this lyric and the video description.\n\n";
+  });
+
+  document.getElementById("output").textContent = storyboard;
+}
+
+</script></body>
+</html>
